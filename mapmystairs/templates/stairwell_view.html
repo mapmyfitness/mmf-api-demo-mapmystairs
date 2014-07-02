@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+    
+    <div class="page-header">
+      <h1><a href="{{ url_for('stairwell_list')}}">Stairwells</a>: {{ stairwell.name }}</h1>
+    </div>
+    
+    <h2>{{ stairwell.city }}, {{ stairwell.state }}</h2>
+    
+    <h3>Key Stats</h3>
+    
+    <p>
+        # of Floors: {{ stairwell.number_of_steps }}<br/>
+        # of Steps: {{ stairwell.number_of_floors }}<br/>
+    </p>
+    
+    <h3>
+        Workout Link: Floor #1 Up Link
+    </h3>
+    <textarea>{{ up_link }}</textarea><br/>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ up_link }}"/><br/>
+
+    <h3>
+        Workout Link: Floor #{{ stairwell.number_of_floors }} Down Link
+    </h3>
+    <textarea>{{ down_link }}</textarea><br/>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ down_link }}"/><br/>
+    
+{% endblock %}

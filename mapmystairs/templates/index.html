@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+    
+    <div class="page-header">
+      <h1>Welcome</h1>
+    </div>
+
+    <p>
+        This demo demonstrates how we can gamify something as simple as walking up and down stairs.
+    </p>
+    
+    <br/>
+    
+    <div style="text-align:center;">
+        
+
+        <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='{{ url_for('auth_login') }}';">Connect with MapMyFitness</button><br/>
+        <br/>
+        
+        <img src="{{ url_for('static', filename='img/stair_climbing_up.jpg') }}"/>
+    
+    </div>
+
+{% endblock %}

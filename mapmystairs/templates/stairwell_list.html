@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+    
+    <div class="page-header">
+      <h1>Stairwells</h1>
+    </div>
+
+    <ul>
+        {% for stairwell in stairwells %}
+            <li>
+                 <strong>
+                     <a href="{{ url_for('stairwell_view', stairwell_id=stairwell.id )}}">{{ stairwell.name }}</a>
+                 </strong><br/> 
+                 {{ stairwell.city }}, {{ stairwell.state }}
+            </li>
+        {% endfor %}
+    </ul>
+    
+{% endblock %}

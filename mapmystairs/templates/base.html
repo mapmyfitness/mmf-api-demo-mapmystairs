@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %}
+            <title>{% block title %}{% endblock %} - MapMyStairs.com</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" media="screen"/>
+            <link href="{{ url_for('static', filename='css/mapmystairs.css') }}" rel="stylesheet" media="screen"/>
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+              <script src="{{ url_for('static', filename='js/html5shiv.js') }}"></script>
+              <script src="{{ url_for('static', filename='js/respond.min.js') }}"></script>
+            <![endif]-->
+            {% block head_append %}
+            {% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <!-- Wrap all page content here -->
+        <div id="wrap">
+    
+          <!-- Fixed navbar -->
+          <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('index' )}}">API Demo: MapMyStairs.com</a>
+              </div>
+              <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                  <li><a href="{{ url_for('index') }}">Home</a></li>
+                  <li><a href="{{ url_for('stairwell_list') }}">Stairwells</a></li>
+                  <li><a href="https://developer.mapmyapi.com/">MapMyFitness API</a></li>
+                  <li><a href="https://github.com/mapmyfitness/mmf-api-demo-mapmystairs">Get the Code</a></li>
+                </ul>
+                {% if session.get('token_key') %}
+                    
+                    <span style="float:right; margin-top: 10px;"> 
+                        <a href="{{ url_for('auth_logout') }}">Logout</a>
+                    </span>
+                
+                {% endif %}
+              </div><!--/.nav-collapse -->
+            </div>
+          </div>
+    
+          <!-- Begin page content -->
+          <div class="container" id="content">
+              
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-dismissable flashes">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {% for message in messages %}
+                        {{ message }}<br/>
+                    {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+    
+            {% block content %}{% endblock %}
+          
+          </div><!--/.container -->
+        
+        </div><!--/ #wrap -->
+    
+        <div id="footer">
+          <div class="container">
+            <p class="text-muted credit">
+                {% block footer %}
+                An API Demo courtesy of <a href="http://www.mapmyfitness.com">MapMyFitness, Inc.</a>
+                {% endblock %}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Javascript -->
+        <script src="{{ url_for('static', filename='js/jquery.1.10.2.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        {% block footer_code %}
+        {% endblock %}
+    </body>
+</html>

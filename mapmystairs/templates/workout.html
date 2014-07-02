@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+  
+    <div class="page-header">
+      <h1>Stair Climb In Progress!</h1>
+    </div>
+    
+    <div style="text-align:center;">
+        <div id="counter">&nbsp;</div>
+        <br/>
+        <img src="{{ url_for('static', filename='img/stair_climbing_%s.jpg' % direction) }}"/> <br/>
+        <br/>
+        <button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='{{ url_for('workout', stairwell_id=stairwell_id, direction=direction, cancel_flag=True) }}';">Cancel Climb</button><br/>        
+    </div>
+    
+
+{% endblock %}
+
+{% block footer_code %}
+
+    <script>
+        var workout_start = {{ workout_start_epoch }};
+        setInterval(function(){
+               var current_time = new Date().getTime() / 1000;
+               var seconds = current_time - workout_start;
+               var minutes = Math.floor(seconds / 60);
+               seconds = Math.round(seconds - minutes * 60);
+               seconds = (seconds < 10 ? "0" : "") + seconds;
+               
+               $("#counter").html(minutes + ":" + seconds);
+               }, 1000);
+
+    </script>
+
+{% endblock %}
