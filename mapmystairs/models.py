@@ -134,5 +134,5 @@ class Workout(db.Model):
         self.direction = direction
     
     def __repr__(self):
-        return '<Workout: %s on %s>' % (self.stairwell.name, self.workout_date)
+        return '<Workout: User %s on %s>' % (self.user_id, self.workout_date)
 
