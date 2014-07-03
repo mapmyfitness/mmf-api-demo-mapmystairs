@@ -12,7 +12,9 @@
         <br/>
         <img src="{{ url_for('static', filename='img/stair_climbing_%s.jpg' % direction) }}"/> <br/>
         <br/>
-        <button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='{{ url_for('workout', stairwell_id=stairwell_id, direction=direction, cancel_flag=True) }}';">Cancel Climb</button><br/>        
+        <button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='{{ url_for('workout', stairwell_id=stairwell_id, direction=direction, cancel_flag=True) }}';">Cancel Climb</button><br/>
+        <br/>
+       <button type="button" class="btn btn-success btn-lg" onclick="window.location.href='{{ url_for('workout', stairwell_id=stairwell_id, direction="up" if direction == "down" else "down") }}';">Done</button><br/>         
     </div>
     
 

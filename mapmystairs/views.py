@@ -18,6 +18,7 @@ from mapmystairs import app, db
 from mapmystairs.decorators import login_required
 from mapmystairs.models import Organization, Stairwell, User, Workout
 from mapmystairs.mmf import MapMyFitnessAPI
+from mapmystairs.utils import get_leaderboard
 
 
 # logging
@@ -25,6 +26,16 @@ logger = logging.getLogger(__name__)
 
 
 # views
+@app.route('/about')
+def about():
+    """
+    About Page
+    """
+    
+    # return template
+    return render_template('about.html')
+
+
 @app.route('/authorize')
 def auth_authorize():
     """
@@ -169,7 +180,6 @@ def debug():
     """
     Returns Error to allow for Debugger
     """
-    
     return fake_error
 
 
@@ -193,10 +203,28 @@ def index():
 def leaderboard():
     """
     Main Leaderboard
+    
+    TODO: get user stairwells
+    TODO: date range filter
+    TODO: different sort order
+    TODO: caching
     """
     
+    # TODO: get user stairwells
+    stairwell_id = 1
+    stairwell = Stairwell.query.get(stairwell_id)
+    
+    # leaderboard
+    leaderboard = get_leaderboard(stairwell_id)
+    
+    # build context
+    context = {
+        'stairwell': stairwell,
+        'leaderboard': leaderboard
+        }
+    
     # return template
-    return render_template('leaderboard.html')
+    return render_template('leaderboard.html', **context)
 
 
 @app.route('/stairwells')
@@ -284,10 +312,12 @@ def workout(stairwell_id, direction):
                                                 stairwell.number_of_steps)
         
         # build workout
+        workout_start = datetime.datetime.now(pytz.utc)
+        
         workout = {
             'activity_type_id': 133,
             'name': workout_name,
-            'start_datetime': datetime.datetime.now(pytz.utc),
+            'start_datetime': workout_start,
             'start_locale_timezone': session['user']['time_zone'],
             'stairwell_id': stairwell_id,
             'notes': 'climbed %s' % stairwell.name,
@@ -296,24 +326,24 @@ def workout(stairwell_id, direction):
             }
         
         session['workout'] = workout
-    
+        
     else:
+
+        workout_start = workout["start_datetime"]
+        
+        # convert back to UTC as pickle lost timezone
+        workout_start = datetime.datetime(workout_start.year,
+                            workout_start.month, workout_start.day,
+                            workout_start.hour, workout_start.minute,
+                            workout_start.second, tzinfo=pytz.utc)
         
         # only save if scan the top or bottom
         if direction != workout["direction"]:
             
             now = datetime.datetime.now(pytz.utc)
-            workout_start = workout["start_datetime"]
-            
-            # convert back to UTC as pickle lost timezone
-            workout_start = datetime.datetime(workout_start.year,
-                                workout_start.month, workout_start.day,
-                                workout_start.hour, workout_start.minute,
-                                workout_start.second, tzinfo=pytz.utc)
             
             # delta in seconds
-            active_time_total = (now - workout_start)\
-                                    .total_seconds()
+            active_time_total = (now - workout_start).total_seconds()
             
             # build vx workout
             fmt = '%Y-%m-%d %H:%M:%S %Z'
@@ -349,13 +379,14 @@ def workout(stairwell_id, direction):
             logger.debug("vx_result: %s", vx_result)
             
             # build workout
+            tz = pytz.timezone(session["user"]["time_zone"])
             time_taken = vx_result['aggregates']['elapsed_time_total']
             energy_burned = vx_result['aggregates']\
                             .get('metabolic_energy_total', 0) * 0.000239005736
                             
             w = Workout(**{
                         'id': vx_result['_links']['self'][0]['id'], 
-                        'workout_date': workout["start_datetime"]\
+                        'workout_date': workout_start.astimezone(tz)\
                                             .strftime('%Y-%m-%d %H:%M:%S'),
                         'user_id': session['user']['id'],
                         'time_taken': time_taken, 
@@ -366,6 +397,7 @@ def workout(stairwell_id, direction):
                         })
             
             # add workout
+            logger.debug("Saving w:%s", w)
             db.session.add(w)
             db.session.commit()
             
@@ -379,12 +411,6 @@ def workout(stairwell_id, direction):
     context['workout'] = workout
     
     # calculate epcoh
-    workout_start = workout['start_datetime']
-    workout_start = datetime.datetime(workout_start.year,
-                                workout_start.month, workout_start.day,
-                                workout_start.hour, workout_start.minute,
-                                workout_start.second, tzinfo=pytz.utc)
-
     workout_start_epoch = (workout_start \
                            - datetime.datetime(1970, 1, 1, tzinfo=pytz.utc))\
                            .total_seconds()
@@ -393,5 +419,4 @@ def workout(stairwell_id, direction):
     
     # return template
     return render_template('workout.html', **context)
-
     

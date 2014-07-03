@@ -1,21 +1,57 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}{{ stairwell.name }} Leaderboard{% endblock %}
 
 {% block content %}
     
     <div class="page-header">
-      <h1>Leaderboard</h1>
+      <h1>{{ stairwell.name }} Leaderboard</h1>
     </div>
 
+    <h3>Fastest</h3>
     <p>
-        Stairwell: <br/>
-        Date Range: <br/>
+        {% if leaderboard["fastest_up"] %}
+            <strong>Up:</strong> {{ leaderboard["fastest_up"]["time_taken"] }} seconds by {{ leaderboard["fastest_up"]["first_name"] }} @ {{ leaderboard["fastest_up"]["workout_date"] }} <br/>
+        {% endif %}
+        {% if leaderboard["fastest_down"] %}
+            <strong>Down:</strong> {{ leaderboard["fastest_down"]["time_taken"] }} seconds by {{ leaderboard["fastest_down"]["first_name"] }} @ {{ leaderboard["fastest_down"]["workout_date"] }} <br/>
+        {% endif %}
     </p>
     
-    <p>
-        <strong>Most:</strong><br/>
-        <strong>Burn:</strong><br/>
-        <strong>Fast:</strong>
-    </p>
+    <h3>Leaderboard</h3>
+    <div class="table-responsive">
+
+        <table class="table table-striped">
+            <thead>
+                <th>&nbsp;</th>
+                <th>Person</th>
+                <th>#</th>
+                <th>Min. Time</th>
+                <th>Steps</th>
+            </thead>
+            <tbody>
+            {% for l in leaderboard["list"] %}
+                
+                {% if l["user_id"] == session["user"]["id"] %}
+                    {% set class = "info" %}
+                {% else %}
+                    {% set class = "" %}
+                {% endif %}
+                
+                <tr style="vertical-align: middle;">
+                    <td class="{{ class }} vert-align">{{ loop.index }}</td>
+                    <td class="{{ class }} vert-align">
+                        <a href="http://www.mapmyfitness.com/profile/{{ l["user_id"] }}/">
+                            <img src="http://www.mapmyfitness.com/profile/{{ l["user_id"] }}/picture?size=Small" class="img-circle"/>
+                            {{ l["first_name"] }} {{ l["last_name"] }}
+                        </a>
+                    </td>
+                    <td class="{{ class }} vert-align">{{ l["workout_count"] }}</td>
+                    <td class="{{ class }} vert-align">{{ l["min_time_taken"] }}s</td>
+                    <td class="{{ class }} vert-align">{{ l["total_number_of_steps"] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
 {% endblock %}

@@ -49,6 +49,11 @@ body {
     color: #222;
 }
 
+.table tbody>tr>td.vert-align
+{
+    vertical-align: middle;
+}
+
 #footer > .container {
   padding-left: 15px;
   padding-right: 15px;

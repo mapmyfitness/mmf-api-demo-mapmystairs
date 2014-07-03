@@ -6,6 +6,7 @@ import logging
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.cache import Cache
 
 import settings
 
@@ -27,6 +28,8 @@ db = SQLAlchemy(app)
 # set the secret key.  keep this really secret:
 app.secret_key = '001011!0 00011011 1100a111 10001111 10100101 1011y001'
 
+# cache
+cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 
 # load views
 import views
