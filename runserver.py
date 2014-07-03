@@ -2,7 +2,6 @@
     Flask Runserver
     ~~~~~~~~~~~~~~~
 """
-
 from mapmystairs import app
 
 
