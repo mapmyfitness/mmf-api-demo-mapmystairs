@@ -88,7 +88,7 @@ def get_leaderboard(stairwell_id):
         leaderboard_list = []
         sql_leaderboard_list = """
             SELECT 
-                u.id as user_id, u.first_name, u.last_name,
+                u.id as user_id, u.first_name, u.last_name, w.direction,
                 COUNT(w.id) as workout_count,
                 MIN(w.time_taken) as min_time_taken,
                 SUM(w.energy_burned) as total_energy_burned,
@@ -99,7 +99,7 @@ def get_leaderboard(stairwell_id):
             WHERE
                 w.stairwell_id = 1
             GROUP BY
-                u.id
+                u.id, w.direction
             ORDER BY
                 COUNT(w.id) desc;
             """
@@ -110,10 +110,11 @@ def get_leaderboard(stairwell_id):
                 'user_id': r[0],
                 'first_name': r[1],
                 'last_name': r[2],
-                'workout_count': r[3],
-                'min_time_taken': r[4],
-                'total_energy_burned': r[5],
-                'total_number_of_steps': r[6]
+                'direction': r[3],
+                'workout_count': r[4],
+                'min_time_taken': r[5],
+                'total_energy_burned': r[6],
+                'total_number_of_steps': r[7]
                 })
   
         # set leaderboard
