@@ -17,10 +17,16 @@ To get a MapMyFitness Developer Key visit https://developer.mapmyapi.com/
 
 Requirements
 ------------
-- MapMyFitness Developer Key
+- Heroku Toolbelt 
+  https://toolbelt.heroku.com/
 - pip 
+  http://www.pip-installer.org/
 - virtualenv
-- mysql instance with host, database, username, password, and port.
+  http://docs.python-guide.org/en/latest/dev/virtualenvs/
+- MapMyFitness Developer Key
+  https://developer.mapmyapi.com/
+- MySQL instance with host, database, username, password, and port
+  http://aws.amazon.com/rds/
 
 
 Installation
@@ -45,8 +51,8 @@ On Mac OX you may have to modify your ~/.virtualenvs/mmf-api-demo-mapmystairs/bi
 To setup your settings.py:
 
     $ workon mmf-api-demo-mapmystairs
-    (mmf-api-demo-mapmystairs) $ cp settings.dist.py settings.py
-    (mmf-api-demo-mapmystairs) $ vi settings.py   
+    (mmf-api-demo-mapmystairs) $ cp .env.dist .env
+    (mmf-api-demo-mapmystairs) $ vi .env
 
 Setting up the Database
 -----------------------
@@ -72,10 +78,26 @@ You can also create some basic starter objects using the same ipython session:
     In [7]: db.session.add(abc_bank_stairwell)
     In [8]: db.session.commit()
 
-Run Flask Server
-----------------
+Run Flask Server Locally
+------------------------
     
     $ workon mmf-api-demo-mapmystairs
-    (mmf-api-demo-mapmystairs) $ python runserver.py
+    (mmf-api-demo-mapmystairs) $ foreman start
 
 
+(optional) Run Flask Server on Heroku
+-------------------------------------
+
+This app was configured to run remotely in an heroku environment.  
+
+This step will create the heroku app, push the config variables from the
+.env file, and then push the code to the server which will automatically 
+run.
+
+You can read more about heroku here: 
+https://devcenter.heroku.com/articles/getting-started-with-python
+
+    $ workon mmf-api-demo-mapmystairs
+    (mmf-api-demo-mapmystairs) $ heroku create mapmystairs
+    (mmf-api-demo-mapmystairs) $ heroku config:push
+    (mmf-api-demo-mapmystairs) $ git push heroku master
