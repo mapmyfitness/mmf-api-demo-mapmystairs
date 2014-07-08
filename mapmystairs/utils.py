@@ -101,7 +101,7 @@ def get_leaderboard(stairwell_id):
             GROUP BY
                 u.id, w.direction
             ORDER BY
-                COUNT(w.id) desc;
+                SUM(w.number_of_steps) DESC;
             """
         
         results = db.engine.execute(sql_leaderboard_list)
