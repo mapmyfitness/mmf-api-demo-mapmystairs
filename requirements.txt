@@ -5,7 +5,7 @@ Jinja2==2.7.1
 MarkupSafe==0.23
 SQLAlchemy==0.9.6
 Werkzeug==0.9.6
-gunicorn==19.0.0
+gunicorn==19.5.0
 itsdangerous==0.24
 mysql-connector-python==1.2.2
 oauthlib==0.6.3
