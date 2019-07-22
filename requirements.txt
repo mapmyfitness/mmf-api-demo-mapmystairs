@@ -10,7 +10,7 @@ itsdangerous==0.24
 mysql-connector-python==1.2.2
 oauthlib==0.6.3
 pytz==2014.4
-requests==2.0.0
+requests==2.20.0
 requests-oauthlib==0.4.0
 simplejson==3.3.1
 wsgiref==0.1.2
